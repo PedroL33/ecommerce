@@ -30,9 +30,9 @@ exports.signup = [
             "errors": [{
                 param: `The ${param} ${value} is already in use.`
             }]
-          })
+          });
         }
-        return res.status(200).json({msg: "User created."})
+        return res.status(200).json({msg: "User created."});
       })
     })
   }
@@ -43,7 +43,7 @@ exports.login = (req, res) => {
   .then((data) => {
     bcrypt.compare(req.body.password, data[0].password, (err, result) => {
       if(result) {
-        const token = jwt.sign({username: data[0].name}, process.env.jwtSecretKey);
+        const token = jwt.sign({username: data[0].name}, process.env.jwtSecretKey, {expiresIn: 60*60});
         return res.status(200).json({
           msg: "Login successful.",
           token: token
@@ -51,7 +51,7 @@ exports.login = (req, res) => {
       }else {
         return res.status(400).json({
           msg: "Invalid credentials."
-        })
+        });
       }
     })
   })

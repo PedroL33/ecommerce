@@ -11,6 +11,7 @@ db.once('open', function() {
 });
 
 var indexRouter = require('./routes/index');
+var productsRouter = require('./routes/products');
 
 var app = express();
 
@@ -19,5 +20,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/products', productsRouter);
 
 module.exports = app;
