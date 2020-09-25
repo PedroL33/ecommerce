@@ -8,11 +8,26 @@ exports.allProducts = (req, res) => {
         error: "Products not found."
       })
     }else {
-      return res.status(200).json({
+      return res.status(200).json(
         products
-      })
+      )
     }
   })
+}
+
+exports.filterProducts = (req, res) => {
+  Product.find({ $or: [{name: {$regex: req.params.filter, "$options": "i"}}, {description: {$regex: req.params.filter, "$options": "i"}}]}, (err, products) => {
+    if(err || products.length===0) {
+      return res.status(400).json({
+        error: "No products found."
+      })
+    }else {
+      return res.status(200).json(
+        products
+      )
+    }
+  })
+
 }
 
 exports.addProduct =[
