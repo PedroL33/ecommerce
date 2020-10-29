@@ -9,7 +9,8 @@ const productSchema = new schema({
   description: {type: String},
   quantity: {type: Number},
   category: {type: Array},
-  added_at: {type: Date}
+  image: {type: String},
+  added_at: {type: Date, default: Date.now()}
 })
 
 module.exports = mongoose.model('Product', productSchema);

@@ -5,7 +5,9 @@ const auth = require('../middleware/checkAuth');
 
 router.get('/', productsController.allProducts);
 
-router.get('/filter/:filter', productsController.filterProducts);
+router.get('/:id', productsController.productById);
+
+router.get('/:type/:value', productsController.filterProducts);
 
 router.post('/create', auth, productsController.addProduct);
 

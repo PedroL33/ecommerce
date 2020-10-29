@@ -16,10 +16,13 @@ exports.allProducts = (req, res) => {
 }
 
 exports.filterProducts = (req, res) => {
-  Product.find({ $or: [{name: {$regex: req.params.filter, "$options": "i"}}, {description: {$regex: req.params.filter, "$options": "i"}}]}, (err, products) => {
-    if(err || products.length===0) {
+  const querry = req.params.type === "search" ?
+  { $or: [{name: {$regex: req.params.value, "$options": "i"}}, {description: {$regex: req.params.value, "$options": "i"}}]} :
+  {category: req.params.value};
+  Product.find(querry, (err, products) => {
+    if(err) {
       return res.status(400).json({
-        error: "No products found."
+        error: "Something went wrong."
       })
     }else {
       return res.status(200).json(
@@ -27,13 +30,24 @@ exports.filterProducts = (req, res) => {
       )
     }
   })
+}
 
+exports.productById = (req, res) => {
+  Product.findById(req.params.id, (err, product) => {
+    if(err) {
+      res.status(400).json({
+        error: "Product could not be found"
+      })
+    }else {
+      res.status(200).json(product);
+    }
+  })
 }
 
 exports.addProduct =[
   body('name').isString().withMessage("Name must be a string value.").isLength({min: 3}).withMessage("Must be 3 characters long."),
   body('price').isInt({min: 0}).withMessage("Price must be an integer value."),
-  body('description').isString().withMessage("Description must be a string value.").isLength({max: 144}).withMessage("Description cannot exceed 144 characters."),
+  body('description').isString().withMessage("Description must be a string value.").isLength({max: 1000}).withMessage("Description cannot exceed 1000 characters."),
   body('quantity').isInt({min: 0, max: 5000}).withMessage("Quantity must be an integer value"),
   body('category').isArray().withMessage("Category must be given as an array."),
   (req, res) => {
