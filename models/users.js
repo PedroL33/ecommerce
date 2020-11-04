@@ -6,7 +6,8 @@ const userSchema = new schema({
   name: {type: String, minlength: [5, "Must be 5 characters."], unique: true, index: true}, 
   email: {type: String, unique: true, index: true},
   id: ObjectId,
-  password: {type: String, minlength: [6, "Must be 6 characters."]}
+  password: {type: String, minlength: [6, "Must be 6 characters."]},
+  status: {type: String}
 })
 
 module.exports = mongoose.model('User', userSchema);

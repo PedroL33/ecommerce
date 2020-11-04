@@ -9,10 +9,10 @@ router.get('/:id', productsController.productById);
 
 router.get('/:type/:value', productsController.filterProducts);
 
-router.post('/create', auth, productsController.addProduct);
+router.post('/create', auth.adminAuth, productsController.addProduct);
 
-router.post('/delete/:id', auth, productsController.deleteProduct);
+router.post('/delete/:id', auth.adminAuth, productsController.deleteProduct);
 
-router.post('/update/:id', auth, productsController.updateProduct);
+router.post('/update/:id', auth.adminAuth, productsController.updateProduct);
 
 module.exports = router;  

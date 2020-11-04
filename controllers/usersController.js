@@ -20,7 +20,8 @@ exports.signup = [
       const user = new User({
         name: req.body.username, 
         email: req.body.email,
-        password: hash
+        password: hash,
+        status: "member"
       })
       user.save((err) => {
         if(err && err.name==="MongoError" && err.code===11000) {
@@ -41,18 +42,27 @@ exports.signup = [
 exports.login = (req, res) => {
   User.find({name: req.body.username})
   .then((data) => {
-    bcrypt.compare(req.body.password, data[0].password, (err, result) => {
-      if(result) {
-        const token = jwt.sign({username: data[0].name}, process.env.jwtSecretKey, {expiresIn: 60*60});
-        return res.status(200).json({
-          msg: "Login successful.",
-          token: token
-        })
-      }else {
-        return res.status(400).json({
-          msg: "Invalid credentials."
-        });
-      }
-    })
+    if(data.length) {
+      bcrypt.compare(req.body.password, data[0].password, (err, result) => {
+        if(result) {
+          const token = jwt.sign({username: data[0].name, status: data[0].status}, process.env.jwtSecretKey, {expiresIn: 60*60});
+          return res.status(200).json({
+            msg: "Login successful.",
+            token: token
+          })
+        }else {
+          return res.status(400).json({
+            msg: "Invalid credentials."
+          });
+        }
+      })
+    }else {
+      return res.status(400).json({
+        msg: "Invalid credentials."
+      });
+    }
+  })
+  .catch(err => {
+    console.log(err)
   })
 }
