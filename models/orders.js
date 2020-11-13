@@ -3,11 +3,13 @@ const schema = mongoose.Schema;
 const ObjectId = schema.ObjectId;
 
 const orderSchema = new schema({
-  contactInfo: {type: Object, required: true}, 
-  orderInfo: {type: Array, required: true},
+  contact: {type: Object, required: true}, 
+  order: {type: Array, required: true},
   id: ObjectId,
-  shippingInfo: {type: Object, required: true},
-  complete: {type: Boolean}
+  shipping: {type: Object, required: true},
+  complete: {type: Boolean},
+  date: {type: Date},
+  tracking: {type: String}
 })
 
 module.exports = mongoose.model("Order", orderSchema);

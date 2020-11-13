@@ -50,11 +50,12 @@ exports.activeOrders = (req, res) => {
 }
 
 exports.markCompleted = (req, res) => {
-  Order.findById(req.body.id, (err, order) => {
+  Order.findById(req.params.id, (err, order) => {
     if(err || order===null) {
       return res.status(400).json({error: "Order could not be updated."})
     }else {
       order.complete = true;
+      order.tracking = req.body.tracking;
       order.save();
       return res.status(200).json({msg: `Order ${order._id} has been updated as complete.`})
     }

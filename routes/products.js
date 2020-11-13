@@ -15,4 +15,6 @@ router.post('/delete/:id', auth.adminAuth, productsController.deleteProduct);
 
 router.post('/update/:id', auth.adminAuth, productsController.updateProduct);
 
+router.post('/uploadPhoto/:id', auth.adminAuth, productsController.uploadPhoto);
+
 module.exports = router;  

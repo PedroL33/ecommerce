@@ -11,10 +11,11 @@ exports.createCharge = async (req, res) => {
       confirm: true 
     });
     const newOrder = new Order({
-      contactInfo: order.contact,
-      orderInfo: order.order,
-      shippingInfo: order.shipping,
-      complete: false
+      contact: order.contact,
+      order: order.order,
+      shipping: order.shipping,
+      complete: false,
+      date: Date.now()
     })
     newOrder.save(err => {
       if(err) {

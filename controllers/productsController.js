@@ -1,5 +1,16 @@
 const Product = require('../models/products');
 const { body, validationResult } = require('express-validator');
+const AWS = require('aws-sdk');
+const fs = require('fs');
+const fileType = require('file-type');
+const multiparty = require('multiparty');
+
+AWS.config.update({
+  accessKeyId: process.env.AWSAccessKeyId,
+  secretAccessKey: process.env.AWSSecretKey
+});
+
+const s3 = new AWS.S3();
 
 exports.allProducts = (req, res) => {
   Product.find({}, (err, products) => {
@@ -85,39 +96,104 @@ exports.deleteProduct = (req, res) => {
   })
 }
 
-exports.updateProduct = [
-  body('field').custom(value => {
-    const values = ["category", "name", "price", "description", "quantity"]
-    if(!values.includes(value)) {
-      throw new Error("Please select a valid category");
-    }
-    return true;
-  }),
-  body('change').custom((change, {req}) => {
-    if(req.body.field === "category" && !Array.isArray(change)) {
-      throw new Error("Category must be an array value.")
-    }else if((req.body.field === "name" || req.body.field === "description") && !(typeof change === 'string')) {
-      throw new Error(`${req.body.field.toUpperCase()} must be a string value.`)
-    }else if((req.body.field === "price" || req.body.field === "quantity") && (!(typeof change === "number") || change % 1 !== 0)) {
-      throw new Error(`${req.body.field.toUpperCase()} must be a integer value.`)
-    }
-    return true;
-  }),
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const extractedErrors = []
-      errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-      return res.status(400).json({ errors: extractedErrors });
-    }
-    Product.findOne({_id: req.params.id}, (err, product) => {
-      if(err) return res.status(400).json({errors: [{_id: "Product not found."}]})
-      product[req.body.field] = req.body.change
+exports.updateProduct = (req, res) => {
+  Product.findById(req.params.id, (err, product) => {
+    if(err) {
+      res.status(400).json({
+        error: err
+      })
+    }else  {
+      product.name = req.body.new_product.name;
+      product.category = req.body.new_product.category;
+      product.price = req.body.new_product.price;
+      product.description = req.body.new_product.description
       product.save((err) => {
-        res.status(200).json({
-          msg: `Product ${req.params.id} ${req.body.field} changed to ${req.body.change}.`
+        if(err) {
+          res.status(400).json(err)
+        }else {
+          res.status(200).json({msg: `Product ${req.params.id} has been updated.`})
+        }
+      })
+    }
+  })
+}
+
+const uploadFile = (buffer, name, type) => {
+  const params = {
+    ACL: 'public-read',
+    Body: buffer,
+    Bucket: 'chatbucket11',
+    ContentType: type.mime,
+    Key: `${name}.${type.ext}`,
+  }
+  return s3.upload(params).promise();
+}
+
+exports.uploadPhoto = (req, res) => {
+  const form = new multiparty.Form();
+  console.log(req)
+  form.parse(req, async (err, fields, files) => {
+    if(err) {
+      return res.status(500).json(err)
+    }
+    try {
+      const path = files.image[0].path;
+      const buffer = fs.readFileSync(path);
+      const type = await fileType.fromBuffer(buffer);
+      const fileName = `bucketFolder/${Date.now().toString()}`;
+      const data = await uploadFile(buffer, fileName, type);
+      Product.findById(req.params.id, (err, product) => {
+        if(err) return res.status(400).json(err)
+        product.image = data.Location
+        product.save(err => {
+          if(err) return res.status(400).json(err)
+          return res.status(200).json({
+            msg: "Photo uploaded"
+          })
         })
       })
-    })
-  }
-]
+    }
+    catch(err) {
+      return res.status(500).json({
+        error: "Something went wrong."
+      })
+    }
+  })
+}
+
+// exports.updateProduct = [
+//   body('field').custom(value => {
+//     const values = ["category", "name", "price", "description", "quantity"]
+//     if(!values.includes(value)) {
+//       throw new Error("Please select a valid category");
+//     }
+//     return true;
+//   }),
+//   body('change').custom((change, {req}) => {
+//     if(req.body.field === "category" && !Array.isArray(change)) {
+//       throw new Error("Category must be an array value.")
+//     }else if((req.body.field === "name" || req.body.field === "description") && !(typeof change === 'string')) {
+//       throw new Error(`${req.body.field.toUpperCase()} must be a string value.`)
+//     }else if((req.body.field === "price" || req.body.field === "quantity") && (!(typeof change === "number") || change % 1 !== 0)) {
+//       throw new Error(`${req.body.field.toUpperCase()} must be a integer value.`)
+//     }
+//     return true;
+//   }),
+//   (req, res) => {
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       const extractedErrors = []
+//       errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
+//       return res.status(400).json({ errors: extractedErrors });
+//     }
+//     Product.findOne({_id: req.params.id}, (err, product) => {
+//       if(err) return res.status(400).json({errors: [{_id: "Product not found."}]})
+//       product[req.body.field] = req.body.change
+//       product.save((err) => {
+//         res.status(200).json({
+//           msg: `Product ${req.params.id} ${req.body.field} changed to ${req.body.change}.`
+//         })
+//       })
+//     })
+//   }
+// ]
