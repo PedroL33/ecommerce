@@ -13,17 +13,21 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 exports.allProducts = (req, res) => {
-  Product.find({}, (err, products) => {
-    if(err) {
-      return res.status(400).json({
-        error: "Products not found."
-      })
-    }else {
-      return res.status(200).json(
-        products
-      )
-    }
-  })
+  try {
+    Product.find({}, (err, products) => {
+      if(err) {
+        return res.status(400).json({
+          error: "Products not found."
+        })
+      }else {
+        return res.status(200).json(
+          products
+        )
+      }
+    })
+  }catch(err) {
+    console.log(err)
+  }
 }
 
 exports.filterProducts = (req, res) => {
