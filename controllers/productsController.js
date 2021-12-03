@@ -135,7 +135,6 @@ const uploadFile = (buffer, name, type) => {
 
 exports.uploadPhoto = (req, res) => {
   const form = new multiparty.Form();
-  console.log(req)
   form.parse(req, async (err, fields, files) => {
     if(err) {
       return res.status(500).json(err)
@@ -164,40 +163,3 @@ exports.uploadPhoto = (req, res) => {
     }
   })
 }
-
-// exports.updateProduct = [
-//   body('field').custom(value => {
-//     const values = ["category", "name", "price", "description", "quantity"]
-//     if(!values.includes(value)) {
-//       throw new Error("Please select a valid category");
-//     }
-//     return true;
-//   }),
-//   body('change').custom((change, {req}) => {
-//     if(req.body.field === "category" && !Array.isArray(change)) {
-//       throw new Error("Category must be an array value.")
-//     }else if((req.body.field === "name" || req.body.field === "description") && !(typeof change === 'string')) {
-//       throw new Error(`${req.body.field.toUpperCase()} must be a string value.`)
-//     }else if((req.body.field === "price" || req.body.field === "quantity") && (!(typeof change === "number") || change % 1 !== 0)) {
-//       throw new Error(`${req.body.field.toUpperCase()} must be a integer value.`)
-//     }
-//     return true;
-//   }),
-//   (req, res) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       const extractedErrors = []
-//       errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-//       return res.status(400).json({ errors: extractedErrors });
-//     }
-//     Product.findOne({_id: req.params.id}, (err, product) => {
-//       if(err) return res.status(400).json({errors: [{_id: "Product not found."}]})
-//       product[req.body.field] = req.body.change
-//       product.save((err) => {
-//         res.status(200).json({
-//           msg: `Product ${req.params.id} ${req.body.field} changed to ${req.body.change}.`
-//         })
-//       })
-//     })
-//   }
-// ]
