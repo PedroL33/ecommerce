@@ -4,13 +4,13 @@ var path = require('path');
 var bodyParser = require('body-parser')
 require('dotenv').config()
 
-const mongoose = require('mongoose');
-mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("Connected to database.")
-});
+// const mongoose = require('mongoose');
+// mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
+// const db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function() {
+//   console.log("Connected to database.")
+// });
 
 var indexRouter = require('./routes/index');
 var productsRouter = require('./routes/products');
