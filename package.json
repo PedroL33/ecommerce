@@ -21,9 +21,11 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
+    "knex": "^0.95.14",
     "mongoose": "^5.10.2",
     "morgan": "~1.9.1",
     "multiparty": "^4.2.2",
+    "pg": "^8.7.1",
     "stripe": "^8.117.0"
   },
   "devDependencies": {
