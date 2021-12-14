@@ -4,6 +4,7 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const fileType = require('file-type');
 const multiparty = require('multiparty');
+const { db } = require('../database/config');
 
 AWS.config.update({
   accessKeyId: process.env.AWSAccessKeyId,
@@ -12,21 +13,13 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-exports.allProducts = (req, res) => {
+exports.allProducts = async (req, res) => {
   try {
-    Product.find({}, (err, products) => {
-      if(err) {
-        return res.status(400).json({
-          error: "Products not found."
-        })
-      }else {
-        return res.status(200).json(
-          products
-        )
-      }
-    })
+    const products = await db('products').select('*');
+    res.status(200).json(products);
   }catch(err) {
     console.log(err)
+    res.status(500).json({err})
   }
 }
 
@@ -47,16 +40,14 @@ exports.filterProducts = (req, res) => {
   })
 }
 
-exports.productById = (req, res) => {
-  Product.findById(req.params.id, (err, product) => {
-    if(err) {
-      res.status(400).json({
-        error: "Product could not be found"
-      })
-    }else {
-      res.status(200).json(product);
-    }
-  })
+exports.productById = async (req, res) => {
+  try {
+    const product = await db('products').select('*').where('id', req.params.id).first();
+    res.status(200).json(product)
+  }catch(err) {
+    console.log(err)
+    res.status(500).json({err})
+  }
 }
 
 exports.addProduct =[

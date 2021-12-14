@@ -8,6 +8,12 @@ exports.up = function(knex) {
     table.integer('quantity');
     table.integer('price');
   })
+  .createTable('users', table => {
+    table.increments('id').primary();
+    table.string('username');
+    table.string('password');
+    table.string('permissions');
+  })
   .createTable('sessions', table => {
     table.increments('id').primary();
     table.integer('total');
@@ -41,10 +47,11 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return Promise.all([
-    knex.dropTable('cart_items'),
-    knex.dropTable('order_items'),
-    knex.dropTable('order_details'),
-    knex.dropTable('products'),
-    knex.dropTable('sessions')
+    knex.schema.dropTable('cart_items'),
+    knex.schema.dropTable('order_items'),
+    knex.schema.dropTable('order_details'),
+    knex.schema.dropTable('users'),
+    knex.schema.dropTable('products'),
+    knex.schema.dropTable('sessions')
   ])
 };
