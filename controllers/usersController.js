@@ -1,68 +1,63 @@
-const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const User = require('../models/users');
 const jwt = require('jsonwebtoken');
+const { db } = require('../database/config');
 
-exports.signup = [
-  body('username').isLength({min: 5}).withMessage("Username must be 5 characters long."),
-  body('email').isEmail().withMessage("Invalid Email format."),
-  body('password').isLength({min: 6}).withMessage("Password must be 6 characters long"), 
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const extractedErrors = []
-      errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-      return res.status(400).json({ errors: extractedErrors });
-    }
-    bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-      if(err) return res.status(400).json(err);
-      const user = new User({
-        name: req.body.username, 
-        email: req.body.email,
-        password: hash,
-        status: "member"
-      })
-      user.save((err) => {
-        if(err && err.name==="MongoError" && err.code===11000) {
-          var param = Object.keys(err["keyValue"])[0];
-          const value = err["keyValue"][param]
-          return res.status(400).json({
-            "errors": [{
-                param: `The ${param} ${value} is already in use.`
-            }]
-          });
+exports.signup = async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    req.body.password = hashedPassword;
+    const user = await db('users').insert(req.body, '*');
+    res.status(200).json(user[0]);
+  }catch(err) {
+    res.status(400).json({
+      errors: [
+        {
+          msg: err.detail,
+          location: err.table
         }
-        return res.status(200).json({msg: "User created."});
-      })
-    })
+      ]
+    });
   }
-]
+}
 
-exports.login = (req, res) => {
-  User.find({name: req.body.username})
-  .then((data) => {
-    if(data.length) {
-      bcrypt.compare(req.body.password, data[0].password, (err, result) => {
-        if(result) {
-          const token = jwt.sign({username: data[0].name, status: data[0].status}, process.env.jwtSecretKey, {expiresIn: 60*60});
-          return res.status(200).json({
-            msg: "Login successful.",
-            token: token
-          })
-        }else {
-          return res.status(400).json({
-            msg: "Invalid credentials."
-          });
+exports.login = async (req, res) => {
+  try {
+    const user = await db('users').select('*').where('username', req.body.username);
+    if(user.length) {
+      const isValid = await bcrypt.compare(req.body.password, user[0].password);
+      if(isValid) {
+        const token = jwt.sign(
+          {
+            username: user[0].username,
+            permissions: user[0].permissions
+          }, 
+          process.env.JWT_SECRET_KEY, 
+          {
+            expiresIn: 3600
+          }
+        );
+        res.status(200).json({
+          msg: "Login successful.",
+          token: token
+        })
+      }else {
+        throw { errors: [
+            { 
+              msg: "Invalid credentials." 
+            }
+          ] 
         }
-      })
+      }
     }else {
-      return res.status(400).json({
-        msg: "Invalid credentials."
-      });
+      throw { errors: [
+          { 
+            msg: "Invalid credentials." 
+          }
+        ] 
+      }
     }
-  })
-  .catch(err => {
-    console.log(err)
-  })
+  }catch(err) {
+    res.status(400).json(err)
+  }
 }

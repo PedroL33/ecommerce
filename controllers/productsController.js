@@ -50,37 +50,15 @@ exports.productById = async (req, res) => {
   }
 }
 
-exports.addProduct =[
-  body('name').isString().withMessage("Name must be a string value.").isLength({min: 3}).withMessage("Must be 3 characters long."),
-  body('price').isInt({min: 0}).withMessage("Price must be an integer value."),
-  body('description').isString().withMessage("Description must be a string value.").isLength({max: 1000}).withMessage("Description cannot exceed 1000 characters."),
-  body('quantity').isInt({min: 0, max: 5000}).withMessage("Quantity must be an integer value"),
-  body('category').isArray().withMessage("Category must be given as an array."),
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const extractedErrors = []
-      errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-      return res.status(400).json({ errors: extractedErrors });
-    }
-    const product = new Product({
-      name: req.body.name,
-      price: req.body.price,
-      description: req.body.description,
-      quantity: req.body.quantity,
-      category: req.body.category
-    })
-    product.save((err) => {
-      if(err) {
-        console.log(err)
-        return res.status(400).json({error: "Something went wrong."})
-      }
-      res.status(200).json({
-        msg: `${req.body.name} has been added to the database`
-      })
-    })
+exports.addProduct = async (req, res) => {
+  try {
+    const product = await db('products').insert(req.body, "*");
+    res.status(200).json(product[0]);
+  }catch(err) {
+    console.log(err)
+    res.status(500).json({err})
   }
-]
+}
 
 exports.deleteProduct = (req, res) => {
   Product.findByIdAndDelete(req.params.id, (err, product) => {

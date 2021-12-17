@@ -1,4 +1,4 @@
-const products = [
+exports.products = [
   {
     id: 1,
     name: "Mauris", 
@@ -136,10 +136,33 @@ const products = [
   },
 ]
 
-// const product = {
+exports.product = {
+  name: "New Product",
+  price: 10000,
+  description: "description",
+  quantity: 10,
+  image:"img.url",
+  category: "items"
+}
 
-// }
+exports.invalidProduct = {
+  name: 12,
+  price: "10000",
+  description: 10000,
+  quantity: "10000",
+  category: 10000
+}
 
-module.exports = {
-  products
-};
+exports.newUser = {
+  username: "FirstUser",
+  password: "password",
+  permissions: "admin",
+  email: 'firstuser@email.com'
+}
+
+exports.invalidUser = {
+  username: 1,
+  password: "1",
+  permissions: 1,
+  email: 1
+}

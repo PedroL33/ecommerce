@@ -6,6 +6,6 @@ before(async () => {
   await db.seed.run();
 })
 
-// after(async () => {
-//   await db.migrate.rollback();
-// })
+after(async () => {
+  await db.migrate.rollback();
+})

@@ -10,9 +10,10 @@ exports.up = function(knex) {
   })
   .createTable('users', table => {
     table.increments('id').primary();
-    table.string('username');
+    table.string('username').unique();
     table.string('password');
     table.string('permissions');
+    table.string('email');
   })
   .createTable('sessions', table => {
     table.increments('id').primary();
