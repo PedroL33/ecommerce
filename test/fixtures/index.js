@@ -83,7 +83,7 @@ exports.products = [
   {
     id: 10,
     name: "Sodales", 
-    description: "Description",
+    description: "Description testsearch",
     category: "gadgets", 
     quantity: 10, 
     image: "https://chatbucket11.s3.amazonaws.com/bucketFolder/1605334330239.jpg", 
@@ -92,7 +92,7 @@ exports.products = [
   {
     id: 11,
     name: "Interdum", 
-    description: "Description",
+    description: "Description testsearch",
     category: "items", 
     quantity: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334355010.jpg", 
@@ -100,7 +100,7 @@ exports.products = [
   },
   {
     id: 12,
-    name: "Urna", 
+    name: "Urna testsearch", 
     description: "Description",
     category: "items", 
     quantity: 10, 
@@ -115,25 +115,7 @@ exports.products = [
     quantity: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334432440.jpg", 
     price: 10000
-  },
-  {
-    id: 14,
-    name: "Interdum", 
-    description: "Description",
-    category: "items", 
-    quantity: 10, 
-    image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334355010.jpg", 
-    price: 10000
-  },
-  {
-    id: 15,
-    name: "Interdum", 
-    description: "Description",
-    category: "items", 
-    quantity: 10, 
-    image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334355010.jpg", 
-    price: 10000
-  },
+  }
 ]
 
 exports.product = {
@@ -143,6 +125,15 @@ exports.product = {
   quantity: 10,
   image:"img.url",
   category: "items"
+}
+
+exports.updatedProduct = {
+  name: "Updated Product", 
+  description: "New description",
+  category: "things", 
+  quantity: 10, 
+  image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334548522.jpg", 
+  price: 10000
 }
 
 exports.invalidProduct = {

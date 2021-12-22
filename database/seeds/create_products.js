@@ -10,7 +10,7 @@ exports.seed = function(knex) {
           description: "Description",
           category: "things", 
           quantity: 10, 
-          image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334548522.jpg", 
+          image: "https://chatbucket11.s3.amazonaws.com/ecommerce/437b8b423a375582626f1a93fa222148.png", 
           price: 10000
         },
         {
@@ -79,7 +79,7 @@ exports.seed = function(knex) {
         },
         {
           name: "Sodales", 
-          description: "Description",
+          description: "Description testsearch",
           category: "gadgets", 
           quantity: 10, 
           image: "https://chatbucket11.s3.amazonaws.com/bucketFolder/1605334330239.jpg", 
@@ -87,7 +87,7 @@ exports.seed = function(knex) {
         },
         {
           name: "Interdum", 
-          description: "Description",
+          description: "Description testsearch",
           category: "items", 
           quantity: 10, 
           image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334355010.jpg", 
@@ -95,7 +95,7 @@ exports.seed = function(knex) {
         },
         {
           name: "Urna", 
-          description: "Description",
+          description: "Description testsearch",
           category: "items", 
           quantity: 10, 
           image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334404481.jpg", 
@@ -107,22 +107,6 @@ exports.seed = function(knex) {
           category: "items", 
           quantity: 10, 
           image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334432440.jpg", 
-          price: 10000
-        },
-        {
-          name: "Interdum", 
-          description: "Description",
-          category: "items", 
-          quantity: 10, 
-          image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334355010.jpg", 
-          price: 10000
-        },
-        {
-          name: "Interdum", 
-          description: "Description",
-          category: "items", 
-          quantity: 10, 
-          image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334355010.jpg", 
           price: 10000
         },
       ]);

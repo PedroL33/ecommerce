@@ -25,7 +25,8 @@ describe("Signup", () => {
     .end((err, res) => {
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('id');
+      expect(res.body).to.have.property('rowCount');
+      expect(res.body.rowCount).to.be.greaterThan(0);
       done();
     })
   })

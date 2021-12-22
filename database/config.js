@@ -1,7 +1,16 @@
 require('dotenv').config();
+const{ Pool } = require('pg');
 
+// knex config for migrations
 const configuration = require('../knexfile')[process.env.NODE_ENV || 'development']
 
-const db = require('knex')(configuration);
+const knex = require('knex')(configuration);
 
-module.exports = { db };
+// pg configuration to connect to psql
+const connectionString = process.env.PSQL_CONNECTION;
+
+const db = new Pool({
+ connectionString
+})
+
+module.exports = { db, knex };

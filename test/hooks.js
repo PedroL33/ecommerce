@@ -1,11 +1,11 @@
-const { db } = require('../database/config');
+const { knex } = require('../database/config');
 
 before(async () => {
-  await db.migrate.rollback();
-  await db.migrate.latest();
-  await db.seed.run();
+  await knex.migrate.rollback();
+  await knex.migrate.latest();
+  await knex.seed.run();
 })
 
 after(async () => {
-  await db.migrate.rollback();
+  await knex.migrate.rollback();
 })
