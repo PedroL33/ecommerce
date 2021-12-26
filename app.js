@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var productsRouter = require('./routes/products');
 var stripeRouter = require('./routes/stripe');
 var orderRouter = require('./routes/orders');
+const cartRouter = require('./routes/carts');
 
 var app = express();
 
@@ -22,5 +23,6 @@ app.use('/', indexRouter);
 app.use('/products', productsRouter);
 app.use('/stripe', stripeRouter);
 app.use('/orders', orderRouter);
+app.use('/carts', cartRouter);
 
 module.exports = app;

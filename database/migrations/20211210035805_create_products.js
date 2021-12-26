@@ -15,32 +15,30 @@ exports.up = function(knex) {
     table.string('permissions');
     table.string('email');
   })
-  .createTable('sessions', table => {
+  .createTable('carts', table => {
     table.increments('id').primary();
-    table.integer('total');
-    table.timestamp('created_at');
-    table.string('token');
+    table.timestamp('created_at').notNull().defaultTo(knex.fn.now());
   })
   .createTable('order_details', table => {
     table.increments('id').primary();
     table.string('contact');
     table.string('shipping');
     table.integer('tracking');
-    table.timestamp('time');
+    table.timestamp('ordered_at').notNull().defaultTo(knex.fn.now());
     table.integer('total');
   })
   .createTable('cart_items', table => {
     table.increments('id').primary();
     table.integer('quantity');
-    table.timestamp('created_at');
-    table.timestamp('modified_at');
+    table.timestamp('created_at').notNull().defaultTo(knex.fn.now());
+    table.timestamp('modified_at').notNull().defaultTo(knex.fn.now());
     table.integer('product_id').references('id').inTable('products').notNull().onDelete('cascade');
-    table.integer('session_id').references('id').inTable('sessions').notNull().onDelete('cascade');
+    table.integer('cart_id').references('id').inTable('carts').notNull().onDelete('cascade');
   })
   .createTable('order_items', table => {
     table.increments('id').primary();
     table.integer('quantity');
-    table.timestamp('created_at');
+    table.timestamp('created_at').notNull().defaultTo(knex.fn.now());
     table.integer('order_id').references('id').inTable('order_details').notNull().onDelete('cascade');
     table.integer('product_id').references('id').inTable('products').notNull().onDelete('cascade');
   })
@@ -53,6 +51,6 @@ exports.down = function(knex) {
     knex.schema.dropTable('order_details'),
     knex.schema.dropTable('users'),
     knex.schema.dropTable('products'),
-    knex.schema.dropTable('sessions')
+    knex.schema.dropTable('carts')
   ])
 };
