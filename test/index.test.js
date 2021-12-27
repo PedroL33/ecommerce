@@ -36,10 +36,11 @@ describe("Signup", () => {
     .send(fixtures.newUser)
     .set('Accept', 'application/json')
     .expect('Content-type', /json/)
-    .expect(400)
+    .expect(500)
     .end((err, res) => {
-      expect(res.status).to.equal(400);
-      expect(res.body).to.have.property('errors');
+      expect(res.status).to.equal(500);
+      expect(res.body).to.have.property('msg');
+      expect(res.body.msg).to.equal('duplicate key value violates unique constraint "users_username_unique"')
       done();
     })
   })
@@ -86,7 +87,8 @@ describe('Login', () => {
     .expect(400)
     .end((err, res) => {
       expect(res.status).to.equal(400);
-      expect(res.body).to.have.property("errors");
+      expect(res.body).to.have.property("msg");
+      expect(res.body.msg).to.equal('Invalid credentials.')
       done();
     })
   })
@@ -102,7 +104,8 @@ describe('Login', () => {
     .expect(400)
     .end((err, res) => {
       expect(res.status).to.equal(400);
-      expect(res.body).to.have.property("errors");
+      expect(res.body).to.have.property("msg");
+      expect(res.body.msg).to.equal('Invalid credentials.')
       done();
     })
   })

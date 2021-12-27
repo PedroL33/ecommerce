@@ -1,59 +1,55 @@
 const { db } = require('../database/config');
 const jwt = require('jsonwebtoken');
+const { BadRequest, NotFound } = require('../utils/errors');
 
-exports.getCart = async (req, res) => {
+exports.getCart = async (req, res, next) => {
   try {
     if(req.headers.authorization === undefined) {
-      throw {
-        msg: "Missing cart token."
-      }
+      throw new BadRequest("Cart could not be found.")
     }
-    let token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const cart = await db.query('SELECT * FROM carts WHERE id=$1', [decoded.id]);
+    const decoded = jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET_KEY);
+    const cart = await db.query('SELECT * FROM carts WHERE id=$1;', [decoded.id]);
+    if(!cart.rows.length) {
+      throw new BadRequest("Cart could not be found.")
+    }
     res.status(200).json(cart.rows[0])
   }catch(err) {
-    let error = err.name && err.name === 'JsonWebTokenError' ? { msg: "Invalid cart token." }: err;
-    // console.log(err)
-    res.status(500).json({errors: [error]});
+    next(err)
   }
-
 }       
 
-exports.createCart = async (req, res) => {
+exports.createCart = async (req, res, next) => {
   try {
-    const cart = await db.query(
+    const cartID = await db.query(
       'INSERT INTO carts DEFAULT VALUES RETURNING id;'
     )
+    if(!cartID.rows.length) {
+      throw new BadRequest('Cart could not be created.')
+    }
     const token = jwt.sign(
-      { id: cart.rows[0].id }, 
+      { id: cartID.rows[0].id }, 
       process.env.JWT_SECRET_KEY, 
       { expiresIn: '1d' }
     )
     res.status(200).json({token});
   }catch(err) {
-    console.log(err)
-    res.status(500).json({errors: [err]})
+    next(err)
   }
 }
 
-exports.deleteCart = async (req, res) => {
+exports.deleteCart = async (req, res, next) => {
   try {
     if(req.headers.authorization === undefined) {
-      throw {
-        msg: "Missing cart token."
-      }
+      throw new BadRequest('Cart could not be found.')
     }
     let token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const cart = await db.query('DELETE FROM products WHERE id=$1', [decoded.id]);
-    if(cart.length) {
-      res.status(200).json({msg: `Cart ${decoded.id} deleted.`});
-    }else {
-      throw { errors: [{msg: `Cart ${decoded.id} could not be deleted.`}]}
+    const cart = await db.query('DELETE FROM carts WHERE id=$1 RETURNING *', [decoded.id]);
+    if(!cart.rows.length) {
+      throw new NotFound('Cart could not be deleted')
     }
+    res.status(200).json({msg: `Cart ${decoded.id} deleted.`});
   }catch(err) {
-    console.log(err);
-    res.status(400).json({errors: [err]});
+    next(err)
   }
 }

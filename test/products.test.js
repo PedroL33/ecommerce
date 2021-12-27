@@ -125,8 +125,24 @@ describe('UPDATE products', () => {
     .expect(200)
     .end((err, res) => {
       expect(res.status).to.equal(200)
-      expect(res.body).to.have.property('rowCount')
-      expect(res.body.rowCount).to.be.greaterThan(0);
+      expect(res.body).to.be.an('object')
+      expect(res.body).to.have.property('id');
+      done();
+    })
+  })
+
+  it("Fails to update if a product is not found", done => {
+    server.put('/products/16')
+    .send(fixtures.updatedProduct)
+    .set('Accept', 'application/json')
+    .set('Authorization', 'Bearer: ' + token)
+    .expect('Content-type', /json/)
+    .expect(404)
+    .end((err, res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg');
+      expect(res.body.msg).to.equal('Product not found.')
       done();
     })
   })
@@ -144,6 +160,36 @@ describe('UPDATE products', () => {
       done();
     })
   })
+
+  it("Fails to upload photo if product not found", done => {
+    server.put('/products/uploadPhoto/16')
+    .set('Content-Type', 'multipart/form-data')
+    .set('Authorization', 'Bearer: ' + token)
+    .attach('image', path.resolve(__dirname, 'fixtures/test.png'))
+    .expect(404)
+    .end((err, res) => {
+      expect(res.status).to.equal(404);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg');
+      expect(res.body.msg).to.equal('Product not found.')
+      done();
+    })
+  })
+
+  it("Fails to upload photo if a file is not present", done => {
+    server.put('/products/uploadPhoto/16')
+    .set('Content-Type', 'multipart/form-data')
+    .set('Authorization', 'Bearer: ' + token)
+    .expect(500)
+    .end((err, res) => {
+      expect(res.status).to.equal(500);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg');
+      expect(res.body.msg).to.equal('Multipart: Boundary not found')
+      done();
+    })
+  })
+
 })
 
 describe("Routes for deleting a product", () => {
@@ -173,10 +219,11 @@ describe("Routes for deleting a product", () => {
     .set('Accept', 'application/json')
     .set('Authorization', 'Bearer: ' + token)
     .expect('Content-type', /json/)
-    .expect(400)
+    .expect(404)
     .end((err, res) => {
-      expect(res.status).to.equal(400)
-      expect(res.body).to.have.property('errors')
+      expect(res.status).to.equal(404)
+      expect(res.body).to.have.property('msg')
+      expect(res.body.msg).to.equal('Product not found.')
       done();
     })
   })

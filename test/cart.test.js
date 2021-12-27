@@ -1,5 +1,4 @@
 const { expect, server } = require('./setup');
-const fixtures = require('./fixtures');
 
 let token;
 
@@ -38,13 +37,12 @@ describe("GET cart", () => {
     server.get('/carts')
     .set('Accept', 'application/json')
     .expect('Content-type', /json/)
-    .expect(500)
+    .expect(400)
     .end((err, res) => {
-      expect(res.status).to.equal(500);
+      expect(res.status).to.equal(400);
       expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('errors');
-      expect(res.body.errors[0]).to.have.property('msg')
-      expect(res.body.errors[0].msg).to.equal('Missing cart token.')
+      expect(res.body).to.have.property('msg');
+      expect(res.body.msg).to.equal('Cart could not be found.')
       done();
     })
   })
@@ -58,9 +56,8 @@ describe("GET cart", () => {
     .end((err, res) => {
       expect(res.status).to.equal(500);
       expect(res.body).to.be.an('object');
-      expect(res.body).to.have.property('errors');
-      expect(res.body.errors[0]).to.have.property('msg')
-      expect(res.body.errors[0].msg).to.equal('Invalid cart token.')
+      expect(res.body).to.have.property('msg');
+      expect(res.body.msg).to.equal('jwt malformed')
       done();
     })
   })
@@ -68,7 +65,7 @@ describe("GET cart", () => {
 
 describe('DELETE cart', () => {
   it('Deletes a cart given valid token', done => {
-    server.get('/carts')
+    server.delete('/carts')
     .set('Accept', 'application/json')
     .set('Authorization', `Bearer: ` + token)
     .expect('Content-type', /json/)
@@ -76,11 +73,24 @@ describe('DELETE cart', () => {
     .end((err, res) => {
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg');
+      expect(res.body.msg).to.equal('Cart 1 deleted.');
       done();
     })
   })
 
-//   it('Fails if token is invalid', done => {
-
-//   })
+  it('Fails if token is invalid', done => {
+    server.delete('/carts')
+    .set('Accept', 'application/json')
+    .set('Authorization', 'Bearer: invalid')
+    .expect('Content-type', /json/)
+    .expect(500)
+    .end((err, res) => {
+      expect(res.status).to.equal(500);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg')
+      expect(res.body.msg).to.equal('jwt malformed')
+      done();
+    })
+  })
 })

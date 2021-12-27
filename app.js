@@ -1,14 +1,14 @@
-var express = require('express');
-var cors = require('cors');
-var path = require('path');
-var bodyParser = require('body-parser')
-require('dotenv').config()
-
-var indexRouter = require('./routes/index');
-var productsRouter = require('./routes/products');
-var stripeRouter = require('./routes/stripe');
-var orderRouter = require('./routes/orders');
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const bodyParser = require('body-parser')
+const handleErrors = require('./middleware/errors');
+const indexRouter = require('./routes/index');
+const productsRouter = require('./routes/products');
+const stripeRouter = require('./routes/stripe');
+const orderRouter = require('./routes/orders');
 const cartRouter = require('./routes/carts');
+require('dotenv').config()
 
 var app = express();
 
@@ -24,5 +24,7 @@ app.use('/products', productsRouter);
 app.use('/stripe', stripeRouter);
 app.use('/orders', orderRouter);
 app.use('/carts', cartRouter);
+
+app.use(handleErrors);
 
 module.exports = app;
