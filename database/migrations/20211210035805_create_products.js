@@ -34,6 +34,7 @@ exports.up = function(knex) {
     table.timestamp('modified_at').notNull().defaultTo(knex.fn.now());
     table.integer('product_id').references('id').inTable('products').notNull().onDelete('cascade');
     table.integer('cart_id').references('id').inTable('carts').notNull().onDelete('cascade');
+    table.unique(['product_id', 'cart_id'])
   })
   .createTable('order_items', table => {
     table.increments('id').primary();

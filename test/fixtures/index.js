@@ -157,3 +157,31 @@ exports.invalidUser = {
   permissions: 1,
   email: 1
 }
+
+exports.cartItems = [
+  {
+    product: 'Interdum',
+    quantity: 3
+  },
+  {
+    product: 'Soldales',
+    quantity: 1
+  }
+]
+
+exports.invalidCartItems = [
+  {
+    product: 'Donnec',
+    quantity: 2
+  },
+  {
+    product: 'Does Not Exist',
+    quantity: 1
+  }
+]
+
+exports.updatedCartItems = [
+  {
+    quantity: 100
+  }
+]

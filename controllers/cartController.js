@@ -8,11 +8,18 @@ exports.getCart = async (req, res, next) => {
       throw new BadRequest("Cart could not be found.")
     }
     const decoded = jwt.verify(req.headers.authorization.split(" ")[1], process.env.JWT_SECRET_KEY);
-    const cart = await db.query('SELECT * FROM carts WHERE id=$1;', [decoded.id]);
+    const cart = await db.query(
+      `SELECT * 
+      FROM cart_items 
+      JOIN carts ON cart_items.cart_id=carts.id 
+      JOIN products ON products.id=cart_items.product_id 
+      WHERE cart_items.cart_id=$1;`
+      , [decoded.id]
+    );
     if(!cart.rows.length) {
       throw new BadRequest("Cart could not be found.")
     }
-    res.status(200).json(cart.rows[0])
+    res.status(200).json(cart.rows)
   }catch(err) {
     next(err)
   }

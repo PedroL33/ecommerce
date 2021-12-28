@@ -8,6 +8,7 @@ const productsRouter = require('./routes/products');
 const stripeRouter = require('./routes/stripe');
 const orderRouter = require('./routes/orders');
 const cartRouter = require('./routes/carts');
+const cartItemRouter = require('./routes/cart_items');
 require('dotenv').config()
 
 var app = express();
@@ -23,6 +24,7 @@ app.use('/', indexRouter);
 app.use('/products', productsRouter);
 app.use('/stripe', stripeRouter);
 app.use('/orders', orderRouter);
+app.use('/cart_items', cartItemRouter);
 app.use('/carts', cartRouter);
 
 app.use(handleErrors);

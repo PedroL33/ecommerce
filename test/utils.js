@@ -12,3 +12,15 @@ module.exports.createToken = () => {
     }
   )
 }
+
+module.exports.createCartToken = () => {
+  return jwt.sign(
+    {
+      id: 1
+    }, 
+    process.env.JWT_SECRET_KEY, 
+    {
+      expiresIn: 3600
+    }
+  )
+}

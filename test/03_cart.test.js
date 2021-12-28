@@ -1,6 +1,8 @@
 const { expect, server } = require('./setup');
+const fixtures = require('./fixtures');
+const utils = require('./utils');
 
-let token;
+let newCartToken;
 
 describe('CREATE cart', () => {
   it("Creates a new cart", done => {
@@ -12,7 +14,7 @@ describe('CREATE cart', () => {
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('token');
-      token = res.body.token;
+      newCartToken = res.body.token
       done();
     })
   })
@@ -20,15 +22,25 @@ describe('CREATE cart', () => {
 
 
 describe("GET cart", () => {
+
+  let cartToken;
+
+  before(() => {
+    cartToken = utils.createCartToken();
+  })
+
   it("Gets a cart by token", done => {
     server.get('/carts')
     .set('Accept', 'application/json')
-    .set('Authorization', `Bearer: ` + token)
+    .set('Authorization', `Bearer: ` + cartToken)
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
       expect(res.status).to.equal(200);
-      expect(res.body).to.be.an('object');
+      expect(res.body).to.be.an('array');
+      expect(res.body).to.have.length(4)
+      expect(res.body[0]).to.have.property('name')
+      expect(res.body[0].name).to.equal(fixtures.products[1].name);
       done();
     })
   })
@@ -67,14 +79,14 @@ describe('DELETE cart', () => {
   it('Deletes a cart given valid token', done => {
     server.delete('/carts')
     .set('Accept', 'application/json')
-    .set('Authorization', `Bearer: ` + token)
+    .set('Authorization', `Bearer: ` + newCartToken)
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg');
-      expect(res.body.msg).to.equal('Cart 1 deleted.');
+      expect(res.body.msg).to.equal('Cart 2 deleted.');
       done();
     })
   })
