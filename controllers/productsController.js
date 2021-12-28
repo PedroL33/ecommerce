@@ -99,7 +99,6 @@ exports.uploadPhoto = async (req, res, next) => {
   }finally {
     fs.unlink(req.file.path, (err) => {
       if(err) return console.log(err)
-      console.log("success")
     });
   }
 }
