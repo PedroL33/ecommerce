@@ -1,41 +1,29 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const Order = require('../models/orders');
 
-exports.createCharge = async (req, res) => {
-  let { amount, token, order } = req.body;
+exports.handlePayment = (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
   try {
-    const payment = await stripe.paymentIntents.create({
-      amount: amount,
-      currency: "USD",
-      payment_method: token,
-      confirm: true 
-    });
-    const newOrder = new Order({
-      contact: order.contact,
-      order: order.order,
-      shipping: order.shipping,
-      complete: false,
-      date: Date.now()
-    })
-    newOrder.save(err => {
-      if(err) {
-        res.status(400).json({
-          message: "Charge made but failed save order information.",
-          success: false
-        })
-      }else {
-        res.status(200).json({
-          message: "Payment successful.",
-          orderId: newOrder._id,
-          success: true
-        });
-      }
-    })
+    event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
   }
-  catch(error) {
-    res.status(400).json({
-      message: error.payment_intent.last_payment_error.message,
-      success: false
-    })
+
+  // Handle the event
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      const paymentIntent = event.data.object;
+      console.log(paymentIntent)
+      // Then define and call a function to handle the event payment_intent.succeeded
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
   }
+
+  // Return a 200 response to acknowledge receipt of the event
+  res.send();
 }
