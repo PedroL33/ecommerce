@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/orderController');
 const auth = require('../middleware/checkAuth');
+const orderController = require('../controllers/orderController');
 
 router.get('/', auth.adminAuth, orderController.allOrders);
-router.get('/completed', auth.adminAuth, orderController.completedOrders);
-router.get('/active', auth.adminAuth, orderController.activeOrders);
-router.get('/:id', auth.adminAuth, orderController.orderById);
-router.post('/update/:id', auth.adminAuth, orderController.markCompleted);
+router.get('/details/:id', auth.adminAuth, orderController.orderDetailsById);
+router.get('/items/:id', auth.adminAuth, orderController.orderItemsById);
+router.get('/:status', auth.adminAuth, orderController.ordersByStatus);
+router.put('/:id', auth.adminAuth, orderController.updateStatus);
 
 module.exports = router;

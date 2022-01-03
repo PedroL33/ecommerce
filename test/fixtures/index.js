@@ -4,7 +4,7 @@ exports.products = [
     name: "Mauris", 
     description: "Description",
     category: "things", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334548522.jpg", 
     price: 10000
   },
@@ -13,7 +13,7 @@ exports.products = [
     name: "Donnec", 
     description: "Description",
     category: "things", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334561892.jpg", 
     price: 25000
   },
@@ -22,7 +22,7 @@ exports.products = [
     name: "Aenean", 
     description: "Description",
     category: "things", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334593861.jpg", 
     price: 35000
   },
@@ -31,7 +31,7 @@ exports.products = [
     name: "Aliquam", 
     description: "Description",
     category: "things", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334577291.jpg", 
     price: 10000
   },
@@ -40,7 +40,7 @@ exports.products = [
     name: "Curabitur", 
     description: "Description",
     category: "things", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334615831.jpg", 
     price: 10000
   },
@@ -49,7 +49,7 @@ exports.products = [
     name: "Vestibulum", 
     description: "Description",
     category: "gadgets", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334635541.jpg", 
     price: 10000
   },
@@ -58,7 +58,7 @@ exports.products = [
     name: "Penatibus", 
     description: "Description",
     category: "gadgets", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334937079.jpg", 
     price: 10000
   },
@@ -67,7 +67,7 @@ exports.products = [
     name: "Lobortis", 
     description: "Description",
     category: "gadgets", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334963509.jpg", 
     price: 10000
   },
@@ -76,7 +76,7 @@ exports.products = [
     name: "Facilisis", 
     description: "Description",
     category: "gadgets", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334495246.jpg", 
     price: 10000
   },
@@ -85,7 +85,7 @@ exports.products = [
     name: "Sodales", 
     description: "Description testsearch",
     category: "gadgets", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.amazonaws.com/bucketFolder/1605334330239.jpg", 
     price: 10000
   },
@@ -94,7 +94,7 @@ exports.products = [
     name: "Interdum", 
     description: "Description testsearch",
     category: "items", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334355010.jpg", 
     price: 10000
   },
@@ -103,7 +103,7 @@ exports.products = [
     name: "Urna testsearch", 
     description: "Description",
     category: "items", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334404481.jpg", 
     price: 10000
   },
@@ -112,7 +112,7 @@ exports.products = [
     name: "Egestas", 
     description: "Description",
     category: "items", 
-    quantity: 10, 
+    stock: 10, 
     image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334432440.jpg", 
     price: 10000
   }
@@ -122,7 +122,7 @@ exports.product = {
   name: "New Product",
   price: 10000,
   description: "description",
-  quantity: 10,
+  stock: 10,
   image:"img.url",
   category: "items"
 }
@@ -131,7 +131,7 @@ exports.updatedProduct = {
   name: "Updated Product", 
   description: "New description",
   category: "things", 
-  quantity: 10, 
+  stock: 10, 
   image: "https://chatbucket11.s3.us-west-2.amazonaws.com/bucketFolder/1605334548522.jpg", 
   price: 10000
 }
@@ -140,7 +140,7 @@ exports.invalidProduct = {
   name: 12,
   price: "10000",
   description: 10000,
-  quantity: "10000",
+  stock: "10000",
   category: 10000
 }
 

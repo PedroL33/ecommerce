@@ -5,7 +5,7 @@ exports.up = function(knex) {
     table.string('description');
     table.string('image');
     table.string('category');
-    table.integer('quantity');
+    table.integer('stock');
     table.integer('price');
   })
   .createTable('users', table => {
@@ -19,11 +19,12 @@ exports.up = function(knex) {
     table.increments('id').primary();
     table.timestamp('created_at').notNull().defaultTo(knex.fn.now());
   })
-  .createTable('order_details', table => {
+  .createTable('orders', table => {
     table.increments('id').primary();
     table.string('contact');
     table.string('shipping');
     table.integer('tracking');
+    table.string('status');
     table.timestamp('ordered_at').notNull().defaultTo(knex.fn.now());
     table.integer('total');
   })
@@ -40,7 +41,7 @@ exports.up = function(knex) {
     table.increments('id').primary();
     table.integer('quantity');
     table.timestamp('created_at').notNull().defaultTo(knex.fn.now());
-    table.integer('order_id').references('id').inTable('order_details').notNull().onDelete('cascade');
+    table.integer('order_id').references('id').inTable('orders').notNull().onDelete('cascade');
     table.integer('product_id').references('id').inTable('products').notNull().onDelete('cascade');
   })
 };
@@ -49,7 +50,7 @@ exports.down = function(knex) {
   return Promise.all([
     knex.schema.dropTable('cart_items'),
     knex.schema.dropTable('order_items'),
-    knex.schema.dropTable('order_details'),
+    knex.schema.dropTable('orders'),
     knex.schema.dropTable('users'),
     knex.schema.dropTable('products'),
     knex.schema.dropTable('carts')

@@ -69,7 +69,6 @@ describe("GET cart", () => {
       expect(res.status).to.equal(500);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg');
-      expect(res.body.msg).to.equal('jwt malformed')
       done();
     })
   })
@@ -101,7 +100,6 @@ describe('DELETE cart', () => {
       expect(res.status).to.equal(500);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg')
-      expect(res.body.msg).to.equal('jwt malformed')
       done();
     })
   })

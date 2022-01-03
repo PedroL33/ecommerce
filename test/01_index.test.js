@@ -40,7 +40,6 @@ describe("Signup", () => {
     .end((err, res) => {
       expect(res.status).to.equal(500);
       expect(res.body).to.have.property('msg');
-      expect(res.body.msg).to.equal('duplicate key value violates unique constraint "users_username_unique"')
       done();
     })
   })

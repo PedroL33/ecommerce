@@ -52,7 +52,6 @@ describe('CREATE cartItem', () => {
       expect(res.status).to.equal(500);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg');
-      expect(res.body.msg).to.equal('jwt malformed')
       done();
     })
   })
@@ -68,7 +67,6 @@ describe('CREATE cartItem', () => {
       expect(res.status).to.equal(500);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg');
-      expect(res.body.msg).to.equal('null value in column "product_id" violates not-null constraint')
       done();
     })
   })
@@ -102,7 +100,6 @@ describe('UPDATE cartItem', () => {
       expect(res.status).to.equal(500)
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg')
-      expect(res.body.msg).to.equal('jwt malformed');
       done();
     })
   })
@@ -149,7 +146,6 @@ describe('DELETE cartItem', () => {
       expect(res.status).to.equal(500)
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg')
-      expect(res.body.msg).to.equal('jwt malformed');
       done();
     })
   })    

@@ -42,8 +42,8 @@ exports.productById = async (req, res, next) => {
 exports.addProduct = async (req, res, next) => {
   try {
     const product = await db.query(
-      'INSERT INTO products (name, description, image, category, quantity, price) VALUES($1, $2, $3, $4, $5, $6);',
-      [req.body.name, req.body.description, req.body.image, req.body.category, req.body.quantity, req.body.price]
+      'INSERT INTO products (name, description, image, category, stock, price) VALUES($1, $2, $3, $4, $5, $6);',
+      [req.body.name, req.body.description, req.body.image, req.body.stock, req.body.quantity, req.body.price]
     )
     if(product.rowCount < 1) {
       throw new BadRequest('Product could not be added.');
@@ -70,7 +70,7 @@ exports.deleteProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     const product = await db.query(
-      'UPDATE products SET name = $1, category = $2, price = $3, description = $4, quantity = $5 WHERE id = $6 RETURNING *;', 
+      'UPDATE products SET name = $1, category = $2, price = $3, description = $4, stock = $5 WHERE id = $6 RETURNING *;', 
       [req.body.name, req.body.category, req.body.price, req.body.description, req.body.quantity, req.params.id]
     );
     if(!product.rows.length) {

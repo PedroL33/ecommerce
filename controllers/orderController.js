@@ -1,63 +1,79 @@
-const Order = require('../models/orders');
 
-exports.allOrders = (req, res) => {
-  Order.find({}, (err, orders) => {
-    if(err) {
-      return res.status(400).json({
-        error: "Order could not be found."
-      })
-    }else {
-      return res.status(200).json(orders)
-    }
-  })
+const { db } = require('../database/config');
+const { BadRequest, NotFound } = require('../utils/errors');
+
+exports.allOrders = async (req, res, next) => {
+  try {
+    const orders = await db.query('SELECT * FROM orders;')
+    res.status(200).json(orders.rows);
+  }catch(err) {
+    next(err)
+  }
 } 
 
-exports.orderById = (req, res) => {
-  console.log(req.params)
-  Order.findById(req.params.id, (err, order) => {
-    if(err) {
-      return res.status(400).json({
-        error: "Order not found."
-      })
-    }else {
-      return res.status(200).json(order)
+exports.orderDetailsById = async (req, res, next) => {
+  try {
+    const order = await db.query(`
+      SELECT * 
+      FROM orders 
+      WHERE id=$1
+    `, [req.params.id]);
+    if(!order.rows.length) {
+      throw new BadRequest('Order cannot be found.')
     }
-  })
+    res.status(200).json(order.rows[0]);
+  }catch(err) {
+    next(err)
+  }
 }
 
-exports.completedOrders = (req, res) => {
-  Order.find({complete: true}, (err, orders) => {
-    if(err) {
-      return res.status(400).json({
-        error: "Orders not found."
-      })
-    }else {
-      return res.status(200).json(orders)
+exports.orderItemsById = async (req, res, next) => {
+  try {
+    const orderItems = await db.query(`
+      SELECT name, image, price, category, quantity
+      FROM orders 
+      JOIN order_items 
+      ON orders.id=order_items.order_id
+      JOIN products 
+      ON products.id=order_items.product_id
+      WHERE orders.id=$1;
+    `, [req.params.id]);
+    if(!orderItems.rows.length) {
+      throw new BadRequest('Order cannot be found.')
     }
-  })
+    res.status(200).json(orderItems.rows);
+  }catch(err) {
+    console.log(err.message)
+    next(err)
+  }
 }
 
-exports.activeOrders = (req, res) => {
-  Order.find({complete: false}, (err, orders) => {
-    if(err) {
-      return res.status(400).json({
-        error: "Orders not found."
-      })
-    }else {
-      return res.status(200).json(orders)
-    }
-  })
+exports.ordersByStatus = async (req, res, next) => {
+  try {
+    const orders = await db.query(`
+      SELECT * 
+      FROM orders
+      WHERE status=$1;
+    `, [req.params.status]);
+    res.status(200).json(orders.rows);
+  }catch(err) {
+    next(err);
+  }
 }
 
-exports.markCompleted = (req, res) => {
-  Order.findById(req.params.id, (err, order) => {
-    if(err || order===null) {
-      return res.status(400).json({error: "Order could not be updated."})
-    }else {
-      order.complete = true;
-      order.tracking = req.body.tracking;
-      order.save();
-      return res.status(200).json({msg: `Order ${order._id} has been updated as complete.`})
+exports.updateStatus = async (req, res, next) => {
+  try {
+    if(!req.body.status) {
+      throw new BadRequest('Update failed. Missing status parameter.')
     }
-  })
+    const order = await db.query(`
+      UPDATE orders
+      SET status=$1 
+      WHERE id=$2
+      RETURNING *; 
+    `, [req.body.status, req.params.id]);
+    res.status(200).json(order.rows[0]);
+  }catch(err) {
+    next(err)
+  }
 }
