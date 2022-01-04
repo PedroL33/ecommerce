@@ -161,7 +161,7 @@ exports.invalidUser = {
 exports.cartItems = [
   {
     product: 'Interdum',
-    quantity: 3
+    quantity: 1
   },
   {
     product: 'Soldales',
@@ -177,6 +177,10 @@ exports.invalidCartItems = [
   {
     product: 'Does Not Exist',
     quantity: 1
+  },
+  {
+    product: 'Interdum',
+    quantity: 11
   }
 ]
 

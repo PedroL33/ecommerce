@@ -43,7 +43,7 @@ exports.addProduct = async (req, res, next) => {
   try {
     const product = await db.query(
       'INSERT INTO products (name, description, image, category, stock, price) VALUES($1, $2, $3, $4, $5, $6);',
-      [req.body.name, req.body.description, req.body.image, req.body.stock, req.body.quantity, req.body.price]
+      [req.body.name, req.body.description, req.body.image, req.body.category, req.body.stock, req.body.price]
     )
     if(product.rowCount < 1) {
       throw new BadRequest('Product could not be added.');
@@ -71,7 +71,7 @@ exports.updateProduct = async (req, res, next) => {
   try {
     const product = await db.query(
       'UPDATE products SET name = $1, category = $2, price = $3, description = $4, stock = $5 WHERE id = $6 RETURNING *;', 
-      [req.body.name, req.body.category, req.body.price, req.body.description, req.body.quantity, req.params.id]
+      [req.body.name, req.body.category, req.body.price, req.body.description, req.body.stock, req.params.id]
     );
     if(!product.rows.length) {
       throw new NotFound('Product not found.')

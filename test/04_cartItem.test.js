@@ -17,6 +17,7 @@ describe('CREATE cartItem', () => {
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
+      console.log(res.body)
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('quantity');
@@ -36,7 +37,21 @@ describe('CREATE cartItem', () => {
       expect(res.status).to.equal(500);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg');
-      expect(res.body.msg).to.equal('duplicate key value violates unique constraint "cart_items_product_id_cart_id_unique"')
+      done();
+    })
+  })
+
+  it('Fails if product stock is insufficient', done => {
+    server.post('/cart_items')
+    .set('Accept', 'application/json')
+    .set('Authorization', `Bearer: ` + token)
+    .send(fixtures.invalidCartItems[2])
+    .expect('Content-type', /json/)
+    .expect(500)
+    .end((err, res) => {
+      expect(res.status).to.equal(500);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg');
       done();
     })
   })
@@ -77,14 +92,30 @@ describe('UPDATE cartItem', () => {
     server.put('/cart_items')
     .set('Accept', 'application/json')
     .set("Authorization", 'Bearer: ' + token)
-    .send(fixtures.updatedCartItems[0])
+    .send({quantity: 4})
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
+      console.log(res.body)
       expect(res.status).to.equal(200)
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('quantity')
-      expect(res.body.quantity).to.equal(fixtures.updatedCartItems[0].quantity);
+      expect(res.body.quantity).to.equal(4);
+      done();
+    })
+  })
+
+  it('Fails if product stock is insufficient', done => {
+    server.put('/cart_items')
+    .set('Accept', 'application/json')
+    .set('Authorization', `Bearer: ` + token)
+    .send({ quantity: 12 })
+    .expect('Content-type', /json/)
+    .expect(500)
+    .end((err, res) => {
+      expect(res.status).to.equal(500);
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg');
       done();
     })
   })
