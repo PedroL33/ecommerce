@@ -6,6 +6,6 @@ before(async () => {
   await knex.seed.run();
 })
 
-// after(async () => {
-//   await knex.migrate.rollback();
-// }) 
+after(async () => {
+  await knex.migrate.rollback();
+}) 
