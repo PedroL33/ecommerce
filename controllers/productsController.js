@@ -23,7 +23,14 @@ exports.productsByCategory = async (req, res, next) => {
 
 exports.productsBySearch = async (req, res, next) => {
   try {
-    const products = await db.query('SELECT * FROM products WHERE name LIKE $1 OR description LIKE $1', [`%${req.params.value}%`])
+    const products = await db.query(`
+      SELECT * 
+      FROM products 
+      WHERE UPPER(name) LIKE UPPER($1) 
+      OR UPPER(description) LIKE UPPER($1)
+      OR UPPER(category) LIKE UPPER($1)`, 
+      [`%${req.params.value}%`]
+    )
     res.status(200).json(products.rows);
   }catch(err) {
     next(err)

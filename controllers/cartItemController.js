@@ -1,6 +1,7 @@
 const { BadRequest, NotFound } = require('../utils/errors');
 const { db } = require('../database/config');
 const jwt = require('jsonwebtoken');
+const { knex } = require('../database/config'); 
 
 exports.createCartItem = async (req, res, next) => {
   try {
@@ -43,7 +44,7 @@ exports.updateCartItem = async (req, res, next) => {
         WHERE id=$2
       ), update_cart_item as (
         UPDATE cart_items 
-        SET quantity=$1 
+        SET quantity=$1, modified_at=to_timestamp($3)
         WHERE id=$2 
         RETURNING *
       ), update_products as (
@@ -52,7 +53,7 @@ exports.updateCartItem = async (req, res, next) => {
         WHERE id=(SELECT product_id FROM update_cart_item))
       SELECT * FROM update_cart_item;
       `, 
-      [req.body.quantity, decoded.id]
+      [req.body.quantity, decoded.id, Date.now()/1000]
     )
     res.status(200).json(cart_item.rows[0]);
   }catch(err) {

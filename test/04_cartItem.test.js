@@ -17,7 +17,6 @@ describe('CREATE cartItem', () => {
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
-      console.log(res.body)
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('quantity');
@@ -96,7 +95,6 @@ describe('UPDATE cartItem', () => {
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
-      console.log(res.body)
       expect(res.status).to.equal(200)
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('quantity')
