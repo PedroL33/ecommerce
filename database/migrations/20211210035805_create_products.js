@@ -22,9 +22,9 @@ exports.up = function(knex) {
   .createTable('orders', table => {
     table.increments('id').primary();
     table.string('contact');
-    table.string('shipping');
+    table.string('shipping').notNull().defaultTo('USPS Priority Mail');
     table.integer('tracking');
-    table.string('status');
+    table.string('status').notNull().defaultTo('pending');
     table.timestamp('ordered_at').notNull().defaultTo(knex.fn.now());
     table.integer('total');
   })

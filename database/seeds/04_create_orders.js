@@ -6,25 +6,24 @@ exports.seed = function(knex) {
       // Inserts seed entries
       return knex('orders').insert([
         {
-          contact: '7591 NW. Smoky Hollow St. Tullahoma, TN 37388', 
+          contact: 'email@email.com', 
           shipping: '7591 NW. Smoky Hollow St. Tullahoma, TN 37388',
-          status: 'pending',
           total: 3000
         },
         {
-          contact: '6 Lyme Lane Freehold, NJ 07728', 
+          contact: 'email@email.com', 
           shipping: '6 Lyme Lane Freehold, NJ 07728',
           status: 'fulfilled',
           total: 4000
         },
         {
-          contact: '860 Lookout St. Des Plaines, IL 60016', 
+          contact: 'email@email.com', 
           shipping: '860 Lookout St. Des Plaines, IL 60016',
           status: 'refunded',
-          total: 5000
+          total: 5000 
         },
         {
-          contact: '8613 Tallwood Drive Mcdonough, GA 30252', 
+          contact: 'email@email.com', 
           shipping: '8613 Tallwood Drive Mcdonough, GA 30252',
           status: 'fulfilled',
           total: 2000
