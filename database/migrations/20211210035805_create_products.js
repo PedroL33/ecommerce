@@ -22,6 +22,7 @@ exports.up = function(knex) {
   .createTable('orders', table => {
     table.increments('id').primary();
     table.string('contact');
+    table.string('shipping_address');
     table.string('shipping').notNull().defaultTo('USPS Priority Mail');
     table.integer('tracking');
     table.string('status').notNull().defaultTo('pending');
