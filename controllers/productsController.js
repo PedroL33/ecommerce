@@ -5,7 +5,11 @@ const { BadRequest, NotFound } = require('../utils/errors');
 
 exports.allProducts = async (req, res, next) => {
   try {
-    const products = await db.query('SELECT * FROM products;');
+    const products = await db.query(`
+      SELECT * 
+      FROM products 
+      ORDER BY id;`
+    );
     res.status(200).json(products.rows);
   }catch(err) {
     next(err)
@@ -77,7 +81,10 @@ exports.deleteProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
   try {
     const product = await db.query(
-      'UPDATE products SET name = $1, category = $2, price = $3, description = $4, stock = $5 WHERE id = $6 RETURNING *;', 
+      `UPDATE products 
+      SET name = $1, category = $2, price = $3, description = $4, stock = $5 
+      WHERE id = $6 
+      RETURNING *;`, 
       [req.body.name, req.body.category, req.body.price, req.body.description, req.body.stock, req.params.id]
     );
     if(!product.rows.length) {
@@ -102,6 +109,7 @@ exports.uploadPhoto = async (req, res, next) => {
     const updatedProduct = await db.query('UPDATE products SET image=$1 WHERE id=$2 RETURNING *', [results[0].Location, req.params.id])
     res.status(200).json(updatedProduct.rows[0])
   }catch(err) {
+    console.log(err)
     next(err);
   }finally {
     fs.unlink(req.file.path, (err) => {

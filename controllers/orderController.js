@@ -30,7 +30,7 @@ exports.orderDetailsById = async (req, res, next) => {
 exports.orderItemsById = async (req, res, next) => {
   try {
     const orderItems = await db.query(`
-      SELECT name, image, price, category, quantity
+      SELECT order_items.id, name, image, price, category, quantity
       FROM orders 
       JOIN order_items 
       ON orders.id=order_items.order_id
