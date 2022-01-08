@@ -33,7 +33,7 @@ exports.createCartItem = async (req, res, next) => {
 
 exports.updateCartItem = async (req, res, next) => {
   try {
-    if(!req.body.quantity) {
+    if(!req.body.quantity || !req.body.product_id) {
       throw new BadRequest('Quantity not specified')
     }
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], process.env.JWT_SECRET_KEY)
@@ -41,20 +41,23 @@ exports.updateCartItem = async (req, res, next) => {
       `WITH get_cart_item as (
         SELECT * 
         FROM cart_items 
-        WHERE id=$2
+        WHERE cart_id=$2 AND product_id=$4
       ), update_cart_item as (
         UPDATE cart_items 
         SET quantity=$1, modified_at=to_timestamp($3)
-        WHERE id=$2 
+        WHERE cart_id=$2 AND product_id=$4 
         RETURNING *
       ), update_products as (
         UPDATE products 
         SET stock=stock-($1-(SELECT quantity FROM get_cart_item)) 
         WHERE id=(SELECT product_id FROM update_cart_item))
-      SELECT * FROM update_cart_item;
+        SELECT * FROM update_cart_item;
       `, 
-      [req.body.quantity, decoded.id, Date.now()/1000]
+      [req.body.quantity, decoded.id, Date.now()/1000, req.body.product_id]
     )
+    if(!cart_item.rows.length) {
+      throw new BadRequest('Item could not be added to cart.')
+    }
     res.status(200).json(cart_item.rows[0]);
   }catch(err) {
     next(err)

@@ -186,6 +186,7 @@ exports.invalidCartItems = [
 
 exports.updatedCartItems = [
   {
-    quantity: 100
+    quantity: 100,
+    product_id: 3
   }
 ]

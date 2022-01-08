@@ -109,7 +109,6 @@ exports.uploadPhoto = async (req, res, next) => {
     const updatedProduct = await db.query('UPDATE products SET image=$1 WHERE id=$2 RETURNING *', [results[0].Location, req.params.id])
     res.status(200).json(updatedProduct.rows[0])
   }catch(err) {
-    console.log(err)
     next(err);
   }finally {
     fs.unlink(req.file.path, (err) => {

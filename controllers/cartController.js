@@ -16,9 +16,6 @@ exports.getCart = async (req, res, next) => {
       WHERE cart_items.cart_id=$1;`
       , [decoded.id]
     );
-    if(!cart.rows.length) {
-      throw new BadRequest("Cart could not be found.")
-    }
     res.status(200).json(cart.rows)
   }catch(err) {
     next(err)

@@ -91,7 +91,7 @@ describe('UPDATE cartItem', () => {
     server.put('/cart_items')
     .set('Accept', 'application/json')
     .set("Authorization", 'Bearer: ' + token)
-    .send({quantity: 4})
+    .send({quantity: 4, product_id: 2})
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
@@ -107,7 +107,7 @@ describe('UPDATE cartItem', () => {
     server.put('/cart_items')
     .set('Accept', 'application/json')
     .set('Authorization', `Bearer: ` + token)
-    .send({ quantity: 12 })
+    .send({ quantity: 12, product_id: 1 })
     .expect('Content-type', /json/)
     .expect(500)
     .end((err, res) => {
@@ -133,7 +133,7 @@ describe('UPDATE cartItem', () => {
     })
   })
 
-  it('Fails if quantity is not specified', done => {
+  it('Fails if quantity or prduct_id is not specified', done => {
     server.put('/cart_items')
     .set('Accept', 'application/json')
     .set('Authorization', 'Bearer: ' + token)

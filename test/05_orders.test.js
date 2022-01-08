@@ -60,7 +60,7 @@ describe('GET orders', () => {
       expect(res.status).to.equal(200);
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('contact');
-      expect(res.body.contact).to.equal('7591 NW. Smoky Hollow St. Tullahoma, TN 37388');
+      expect(res.body.contact).to.equal('email@email.com');
       done();
     })
   })
