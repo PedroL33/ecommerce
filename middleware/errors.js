@@ -13,6 +13,12 @@ const handleErrors = (err, req, res, next ) => {
       errors: err.errors
     })
   }
+  if(err.message == "new row for relation \"products\" violates check constraint \"stock_is_positive\"") {
+    return res.status(500).json({
+      status: 'error',
+      msg: "Out of stock."
+    })
+  }
   return res.status(500).json({
     status: 'error',
     msg: err.message

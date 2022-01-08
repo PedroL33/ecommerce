@@ -33,8 +33,9 @@ exports.createCartItem = async (req, res, next) => {
 
 exports.updateCartItem = async (req, res, next) => {
   try {
+    console.log(req.body)
     if(!req.body.quantity || !req.body.product_id) {
-      throw new BadRequest('Quantity not specified')
+      throw new BadRequest('Must include quantity and product_id')
     }
     const decoded = jwt.verify(req.headers.authorization.split(' ')[1], process.env.JWT_SECRET_KEY)
     const cart_item = await db.query(
@@ -56,7 +57,7 @@ exports.updateCartItem = async (req, res, next) => {
       [req.body.quantity, decoded.id, Date.now()/1000, req.body.product_id]
     )
     if(!cart_item.rows.length) {
-      throw new BadRequest('Item could not be added to cart.')
+      throw new BadRequest('Item could not be updated.')
     }
     res.status(200).json(cart_item.rows[0]);
   }catch(err) {
