@@ -7,7 +7,7 @@ const configuration = require('../knexfile')[process.env.NODE_ENV || 'developmen
 const knex = require('knex')(configuration);
 
 // pg configuration to connect to psql
-const connectionString = process.env.PSQL_CONNECTION;
+const connectionString = process.env.DATABASE_URL;
 
 const db = new Pool({
  connectionString
