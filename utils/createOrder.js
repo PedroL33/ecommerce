@@ -10,7 +10,7 @@ exports.createOrder = (order_details, total) => {
       INSERT INTO order_items(quantity, product_id, order_id)
       SELECT quantity, product_id, (SELECT id FROM create_order) AS order_id
       FROM cart_items
-      WHERE id=$5
+      WHERE cart_id=$5
     ), delete_cart AS (
       DELETE FROM carts 
       WHERE id=$5 RETURNING *
