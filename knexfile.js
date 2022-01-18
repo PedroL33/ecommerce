@@ -20,7 +20,7 @@ module.exports = {
     ssl: { rejectUnauthorized: false },
     connection: process.env.DATABASE_URL,
     migrations: {
-      tableName: './database/migrations'
+      directory: './database/migrations'
     },
     seeds: {
       directory: './database/seeds'
