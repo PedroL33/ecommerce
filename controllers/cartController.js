@@ -13,7 +13,8 @@ exports.getCart = async (req, res, next) => {
       FROM cart_items 
       JOIN carts ON cart_items.cart_id=carts.id 
       JOIN products ON products.id=cart_items.product_id 
-      WHERE cart_items.cart_id=$1;`
+      WHERE cart_items.cart_id=$1
+      ORDER BY cart_items.created_at ASC;`
       , [decoded.id]
     );
     res.status(200).json(cart.rows)

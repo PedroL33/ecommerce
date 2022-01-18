@@ -19,6 +19,12 @@ const handleErrors = (err, req, res, next ) => {
       msg: "Out of stock."
     })
   }
+  if(err.message == "jwt malformed") {
+    return res.status(500).json({
+      status: 'error',
+      msg: 'Invalid or missing token.'
+    })
+  }
   return res.status(500).json({
     status: 'error',
     msg: err.message

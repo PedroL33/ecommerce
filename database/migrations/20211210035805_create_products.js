@@ -18,6 +18,7 @@ exports.up = function(knex) {
   .createTable('carts', table => {
     table.increments('id').primary();
     table.timestamp('created_at').notNull().defaultTo(knex.fn.now());
+    table.string('client_id');
   })
   .createTable('orders', table => {
     table.increments('id').primary();

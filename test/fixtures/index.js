@@ -190,3 +190,22 @@ exports.updatedCartItems = [
     product_id: 3
   }
 ]
+
+exports.paymentIntentInfo = {
+  shipping_address: '7591 NW. Smoky Hollow St., Tullahoma, TN, United States, 37388',
+  shipping_method: 'USPS Priority Mail',
+  contact: '123@123.com'
+}
+
+exports.invalidPaymentIntentInfo = {
+  shipping_address: '7591 NW. Smoky Hollow St. Tullahoma TN, United States, 37388',
+  shipping_method: 'USPS Priority Mail',
+  contact: '123@123.com'
+}
+
+exports.testStripeMetadata = {
+  cart_id: 1,
+  shipping_address: '7591 NW. Smoky Hollow St. Tullahoma TN, United States, 37388',
+  shipping: 'USPS Priority Mail',
+  contact: '123@123.com'
+}

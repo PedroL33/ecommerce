@@ -98,7 +98,7 @@ describe('UPDATE cartItem', () => {
       expect(res.status).to.equal(200)
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('quantity')
-      expect(res.body.quantity).to.equal(4);
+      expect(res.body.quantity).to.equal(6);
       done();
     })
   })
@@ -107,7 +107,7 @@ describe('UPDATE cartItem', () => {
     server.put('/cart_items')
     .set('Accept', 'application/json')
     .set('Authorization', `Bearer: ` + token)
-    .send({ quantity: 12, product_id: 1 })
+    .send({ quantity: 12, product_id: 2 })
     .expect('Content-type', /json/)
     .expect(500)
     .end((err, res) => {
@@ -143,7 +143,6 @@ describe('UPDATE cartItem', () => {
       expect(res.status).to.equal(400)
       expect(res.body).to.be.an('object');
       expect(res.body).to.have.property('msg')
-      expect(res.body.msg).to.equal('Quantity not specified');
       done();
     })
   })
@@ -154,6 +153,7 @@ describe('DELETE cartItem', () => {
     server.delete('/cart_items')
     .set('Accept', 'application/json')
     .set('Authorization', 'Bearer: ' + token)
+    .send({product_id: 2})
     .expect('Content-type', /json/)
     .expect(200)
     .end((err, res) => {
@@ -165,10 +165,25 @@ describe('DELETE cartItem', () => {
     })
   })
 
+  it('Fails if product_id not included', done => {
+    server.delete('/cart_items')
+    .set('Accept', 'application/json')
+    .set('Authorization', 'Bearer: ' + token)
+    .expect('Content-type', /json/)
+    .expect(400)
+    .end((err, res) => {
+      expect(res.status).to.equal(400)
+      expect(res.body).to.be.an('object');
+      expect(res.body).to.have.property('msg')
+      done();
+    })
+  })
+
   it('Fails if token is invalid', done => {
     server.delete('/cart_items')
     .set('Accept', 'application/json')
     .set('Authorization', 'Bearer: invalid')
+    .send({product_id: 2})
     .expect('Content-type', /json/)
     .expect(500)
     .end((err, res) => {
